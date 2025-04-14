@@ -1,0 +1,37 @@
+<!-- flask_app/templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Health Monitoring Prediction</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Health Prediction using Federated Learning</h1>
+    <form id="prediction-form">
+      <label>Enter Input Data (comma-separated):</label><br>
+      <input type="text" name="input_data" placeholder="e.g., 0.1, 0.5, 0.3, ..."><br>
+      <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('prediction-form');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch("/predict", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      resultDiv.innerHTML = `<h3>Prediction: ${data.prediction}</h3>`;
+    });
+  </script>
+</body>
+</html>

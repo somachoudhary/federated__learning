@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Detection</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f4f4f9; }
+        h1 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #555; }
+        input[type="number"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { display: block; width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Stress Detection</h1>
+    <p>Enter health data to predict stress (trained with Federated Learning)</p>
+    <form id="predict-form">
+        <div class="form-group">
+            <label for="Axis1">Axis1 (e.g., 0.1)</label>
+            <input type="number" step="any" id="Axis1" name="Axis1" placeholder="0.1" required>
+        </div>
+        <div class="form-group">
+            <label for="Axis2">Axis2 (e.g., 0.2)</label>
+            <input type="number" step="any" id="Axis2" name="Axis2" placeholder="0.2" required>
+        </div>
+        <div class="form-group">
+            <label for="Axis3">Axis3 (e.g., 0.3)</label>
+            <input type="number" step="any" id="Axis3" name="Axis3" placeholder="0.3" required>
+        </div>
+        <div class="form-group">
+            <label for="VectorMagnitude">Vector Magnitude (e.g., 0.4)</label>
+            <input type="number" step="any" id="VectorMagnitude" name="Vector Magnitude" placeholder="0.4" required>
+        </div>
+        <div class="form-group">
+            <label for="RR">RR Interval (e.g., 800)</label>
+            <input type="number" step="any" id="RR" name="RR" placeholder="800" required>
+        </div>
+        <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.getElementById("predict-form").onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = {
+                Axis1: parseFloat(document.getElementById("Axis1").value),
+                Axis2: parseFloat(document.getElementById("Axis2").value),
+                Axis3: parseFloat(document.getElementById("Axis3").value),
+                "Vector Magnitude": parseFloat(document.getElementById("VectorMagnitude").value),
+                RR: parseFloat(document.getElementById("RR").value)
+            };
+            try {
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                if (result.error) {
+                    document.getElementById("result").innerText = `Error: ${result.error}`;
+                } else {
+                    document.getElementById("result").innerText = `Prediction: ${result.prediction} (Confidence: ${(result.confidence * 100).toFixed(2)}%)`;
+                }
+            } catch (error) {
+                document.getElementById("result").innerText = `Error: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>

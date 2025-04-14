@@ -1,0 +1,7 @@
+from tensorflow.keras.models import load_model
+
+# Load the FL-trained model
+model = load_model("models/global_model.h5")
+
+# Example usage
+prediction = model.predict(preprocessed_input)
