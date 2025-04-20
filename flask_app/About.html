@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Detection - About</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">Stress Detection</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
+            <li><a href="{{ url_for('about') }}" class="nav-link active">About</a></li>
+            <li><a href="{{ url_for('contact') }}" class="nav-link">Contact</a></li>
+            <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <svg id="sun-icon" class="icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                <svg id="moon-icon" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+            </button></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>About the Project</h1>
+        <div class="card">
+            <div class="content">
+                <h2>Privacy-Preserving Stress Detection</h2>
+                <p>This project leverages <strong>Federated Learning (FL)</strong> to detect stress from health data while preserving user privacy. Using the <strong>MMASH dataset</strong>, we process accelerometer and heart rate data (Axis1, Axis2, Axis3, Vector Magnitude, RR Interval) to predict stress levels without centralizing sensitive data.</p>
+                <h3>Why Federated Learning?</h3>
+                <p>FL enables model training across multiple devices (e.g., 22 clients) without sharing raw data, addressing privacy concerns in healthcare. Our model, built with <strong>Flower AI</strong>, aggregates weights from clients to create a global model, achieving ~70–90% accuracy.</p>
+                <h3>samAI Hackathon</h3>
+                <p>Developed for the <strong>samAI Hackathon</strong> (AI for Health & Wellbeing), this project showcases early diagnostics and privacy-preserving AI. The Flask web app provides an interactive interface for real-time stress predictions.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 Stress Detection Project | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('contact') }}">Contact</a></p>
+        <p>Built with Federated Learning for the samAI Hackathon</p>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const toggleButton = document.getElementById("theme-toggle");
+        const sunIcon = document.getElementById("sun-icon");
+        const moonIcon = document.getElementById("moon-icon");
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+            sunIcon.classList.remove("hidden");
+            moonIcon.classList.add("hidden");
+        }
+        toggleButton.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+            localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+            sunIcon.classList.toggle("hidden");
+            moonIcon.classList.toggle("hidden");
+        });
+    </script>
+</body>
+</html>
