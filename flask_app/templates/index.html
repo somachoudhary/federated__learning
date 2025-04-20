@@ -4,47 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stress Detection</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f4f4f9; }
-        h1 { text-align: center; color: #333; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: #555; }
-        input[type="number"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { display: block; width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #0056b3; }
-        #result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; text-align: center; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Stress Detection</h1>
-    <p>Enter health data to predict stress (trained with Federated Learning)</p>
-    <form id="predict-form">
-        <div class="form-group">
-            <label for="Axis1">Axis1 (e.g., 0.1)</label>
-            <input type="number" step="any" id="Axis1" name="Axis1" placeholder="0.1" required>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">Stress Detection</div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-link active">Home</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <svg id="sun-icon" class="icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                <svg id="moon-icon" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+            </button></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Predict Your Stress Level</h1>
+        <p>Enter health data to predict stress using Federated Learning</p>
+
+        <!-- Form Card -->
+        <div class="card">
+            <form id="predict-form" class="form">
+                <div class="form-group">
+                    <label for="Axis1" data-tooltip="Accelerometer X-axis (0–1)">Axis1</label>
+                    <input type="number" step="any" id="Axis1" name="Axis1" placeholder="e.g., 0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="Axis2" data-tooltip="Accelerometer Y-axis (0–1)">Axis2</label>
+                    <input type="number" step="any" id="Axis2" name="Axis2" placeholder="e.g., 0.2" required>
+                </div>
+                <div class="form-group">
+                    <label for="Axis3" data-tooltip="Accelerometer Z-axis (0–1)">Axis3</label>
+                    <input type="number" step="any" id="Axis3" name="Axis3" placeholder="e.g., 0.3" required>
+                </div>
+                <div class="form-group">
+                    <label for="VectorMagnitude" data-tooltip="Movement intensity (0–1)">Vector Magnitude</label>
+                    <input type="number" step="any" id="VectorMagnitude" name="Vector Magnitude" placeholder="e.g., 0.4" required>
+                </div>
+                <div class="form-group">
+                    <label for="RR" data-tooltip="Heart rate interval in ms (600–1200)">RR Interval</label>
+                    <input type="number" step="any" id="RR" name="RR" placeholder="e.g., 800" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" id="predict-btn">Predict</button>
+                    <button type="button" id="reset-btn">Reset</button>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="Axis2">Axis2 (e.g., 0.2)</label>
-            <input type="number" step="any" id="Axis2" name="Axis2" placeholder="0.2" required>
+
+        <!-- Result -->
+        <div id="result" class="result hidden"></div>
+
+        <!-- History -->
+        <div id="history" class="history hidden">
+            <h2>Prediction History</h2>
+            <ul id="history-list"></ul>
         </div>
-        <div class="form-group">
-            <label for="Axis3">Axis3 (e.g., 0.3)</label>
-            <input type="number" step="any" id="Axis3" name="Axis3" placeholder="0.3" required>
-        </div>
-        <div class="form-group">
-            <label for="VectorMagnitude">Vector Magnitude (e.g., 0.4)</label>
-            <input type="number" step="any" id="VectorMagnitude" name="Vector Magnitude" placeholder="0.4" required>
-        </div>
-        <div class="form-group">
-            <label for="RR">RR Interval (e.g., 800)</label>
-            <input type="number" step="any" id="RR" name="RR" placeholder="800" required>
-        </div>
-        <button type="submit">Predict</button>
-    </form>
-    <div id="result"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Stress Detection Project | <a href="#about">About</a> | <a href="#contact">Contact</a></p>
+        <p>Built with Federated Learning for the samAI Hackathon</p>
+    </footer>
+
     <script>
-        document.getElementById("predict-form").onsubmit = async (e) => {
+        // Theme Toggle
+        const toggleButton = document.getElementById("theme-toggle");
+        const sunIcon = document.getElementById("sun-icon");
+        const moonIcon = document.getElementById("moon-icon");
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+            sunIcon.classList.remove("hidden");
+            moonIcon.classList.add("hidden");
+        }
+        toggleButton.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+            localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+            sunIcon.classList.toggle("hidden");
+            moonIcon.classList.toggle("hidden");
+        });
+
+        // Form Handling
+        const form = document.getElementById("predict-form");
+        const resultDiv = document.getElementById("result");
+        const predictBtn = document.getElementById("predict-btn");
+        const historyDiv = document.getElementById("history");
+        const historyList = document.getElementById("history-list");
+
+        form.onsubmit = async (e) => {
             e.preventDefault();
+            predictBtn.disabled = true;
+            predictBtn.innerHTML = '<span class="spinner"></span> Predicting...';
+            resultDiv.classList.add("hidden");
+
             const formData = {
                 Axis1: parseFloat(document.getElementById("Axis1").value),
                 Axis2: parseFloat(document.getElementById("Axis2").value),
@@ -52,6 +109,15 @@
                 "Vector Magnitude": parseFloat(document.getElementById("VectorMagnitude").value),
                 RR: parseFloat(document.getElementById("RR").value)
             };
+
+            if (Object.values(formData).some(val => isNaN(val))) {
+                resultDiv.classList.remove("hidden");
+                resultDiv.innerHTML = '<span class="error">Error: All fields must be valid numbers</span>';
+                predictBtn.disabled = false;
+                predictBtn.innerHTML = "Predict";
+                return;
+            }
+
             try {
                 const response = await fetch("/predict", {
                     method: "POST",
@@ -59,15 +125,41 @@
                     body: JSON.stringify(formData)
                 });
                 const result = await response.json();
+                resultDiv.classList.remove("hidden");
                 if (result.error) {
-                    document.getElementById("result").innerText = `Error: ${result.error}`;
+                    resultDiv.innerHTML = `<span class="error">Error: ${result.error}</span>`;
                 } else {
-                    document.getElementById("result").innerText = `Prediction: ${result.prediction} (Confidence: ${(result.confidence * 100).toFixed(2)}%)`;
+                    const confidence = (result.confidence * 100).toFixed(2);
+                    resultDiv.innerHTML = `Prediction: <span class="${result.prediction === 'Stress' ? 'stress' : 'no-stress'}">${result.prediction}</span> (Confidence: ${confidence}%)`;
+                    historyDiv.classList.remove("hidden");
+                    const li = document.createElement("li");
+                    const timestamp = new Date().toLocaleTimeString();
+                    li.innerHTML = `[${timestamp}] Axis1: ${formData.Axis1}, Axis2: ${formData.Axis2}, Axis3: ${formData.Axis3}, VM: ${formData["Vector Magnitude"]}, RR: ${formData.RR} → ${result.prediction} (${confidence}%)`;
+                    historyList.prepend(li);
                 }
             } catch (error) {
-                document.getElementById("result").innerText = `Error: ${error.message}`;
+                resultDiv.classList.remove("hidden");
+                resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
             }
+            predictBtn.disabled = false;
+            predictBtn.innerHTML = "Predict";
         };
+
+        // Reset Form
+        document.getElementById("reset-btn").onclick = () => {
+            form.reset();
+            resultDiv.classList.add("hidden");
+            resultDiv.innerHTML = "";
+        };
+
+        // Nav Link Active State
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks.forEach(link => {
+            link.addEventListener("click", (e) => {
+                navLinks.forEach(l => l.classList.remove("active"));
+                e.target.classList.add("active");
+            });
+        });
     </script>
 </body>
 </html>
